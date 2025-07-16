@@ -35,27 +35,38 @@ namespace Generador_Token.Service
             }
         }
 
-        public static async void RegistrarCod(string cod, string mac)
+        public static async Task RegistrarCod(string cod, string mac)
         {
-            DataConexion.GetConnectionString(new List<Models.EmpresaModel>()); // Cambiado a acceso estático
-            var conexionDB = await DataConexion.Conectar();
-
             try
             {
-                DataConexion.Abrir();
-                string query = $"UPDATE empresas.llequipo SET codigo_act = '{cod}' WHERE nro_mac = '{mac}';";
-                MySqlCommand comando = new MySqlCommand(query);
-                comando.Parameters.AddWithValue("@cod", cod);
-                comando.Parameters.AddWithValue("@mac", mac);
-                comando.ExecuteNonQuery();
+                var conexionDB = await DataConexion.Conectar(); // asumo que devuelve MySqlConnection
 
+                using (conexionDB)
+                {
+                    await conexionDB.OpenAsync();
+
+                    string query = "UPDATE empresas.llequipo SET codigo_act = @cod WHERE nro_mac = @mac;";
+
+                    using (var comando = new MySqlCommand(query, conexionDB))
+                    {
+                        comando.Parameters.AddWithValue("@cod", cod);
+                        comando.Parameters.AddWithValue("@mac", mac);
+
+                        int filasAfectadas = await comando.ExecuteNonQueryAsync();
+
+                        if (filasAfectadas == 0)
+                        {
+                            Console.WriteLine("No se actualizó ningún registro. Revisa que la MAC exista.");
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error al registrar código: " + ex.Message);
+                Console.WriteLine($"Error al registrar código: {ex.Message}");
             }
-           
         }
+
 
     }
 }
