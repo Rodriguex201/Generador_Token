@@ -21,21 +21,21 @@ namespace Generador_Token
         {
             InitializeComponent();
             empresa = TxtCodEmpresa.Text;
-
-            var dispositivo = Servicesllequipo.ListaDispositivos(empresa).GetAwaiter().GetResult(); // se guarda la lista de dispositivos
-            CmbTipodispositivo.Items.AddRange(dispositivo.ToArray()); // se agregan los dispositivos al ComboBox
+            //var codigoEmpresa = ;
+            
+            
 
         }
 
-        private void GenerarToken_Click(object sender, EventArgs e)
+        private async void GenerarToken_Click(object sender, EventArgs e)
         {
-            dispositivoSelect = CmbTipodispositivo.SelectedItem?.ToString(); // se obtiene el dispositivo seleccionado
-            codigoMac = CmbId.SelectedItem?.ToString(); // se obtiene la MAC seleccionada
+            dispositivoSelect = CmbDispositivo.SelectedItem?.ToString(); // se obtiene el dispositivo seleccionado
+            codigoMac = CmbMac.SelectedItem?.ToString(); // se obtiene la MAC seleccionada
 
             if (empresa != null && dispositivoSelect != null && codigoMac != null)
             {
                 string codigo = ServiceCodigo.CrearCodActivacionFecha(empresa, dispositivoSelect, codigoMac);
-                ServiceCodigo.RegistrarCod(codigo,codigoMac); // se registra el código generado en la base de datos
+                await ServiceCodigo.RegistrarCod(codigo,codigoMac); // se registra el código generado en la base de datos
                 MessageBox.Show("Su Codigo es: " + codigo);
 
 
@@ -71,10 +71,10 @@ namespace Generador_Token
 
         private void btnBuscar_Click(object sender, EventArgs e)
         {
-            dispositivoSelect = CmbTipodispositivo.SelectedItem?.ToString(); // se obtiene el dispositivo seleccionado
+            dispositivoSelect = CmbDispositivo.SelectedItem?.ToString(); // se obtiene la mac de los dispositivos seleccionados
 
             var mac = ServiceBuscarEquipo.ListaMac(dispositivoSelect).GetAwaiter().GetResult();// se obtiene la lista de MACs del dispositivo seleccionado
-            CmbId.Items.AddRange(mac.ToArray()); // se agregan las MACs al ComboBox
+            CmbMac.Items.AddRange(mac.ToArray()); // se agregan las MACs al ComboBox
 
             //Servicesllequipo.ListaDispositivos(codigo).GetAwaiter().GetResult();
             //ServiceBuscarEquipo.ListaMac(tipoDispositivo);
@@ -82,6 +82,20 @@ namespace Generador_Token
 
         private void tbToken_TextChanged(object sender, EventArgs e)
         {
+
+        }
+
+        private void CmbTipodispositivo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //CmbMac
+            var dispositivo = Servicesllequipo.ListaDispositivos(empresa).GetAwaiter().GetResult(); // se guarda la lista de dispositivos
+            CmbDispositivo.Items.AddRange(dispositivo.ToArray()); // se agregan los dispositivos al ComboBox
+            
 
         }
     }

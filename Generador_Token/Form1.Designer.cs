@@ -35,20 +35,21 @@ namespace Generador_Token
             this.lbCodEmpresa = new System.Windows.Forms.Label();
             this.TxtCodEmpresa = new System.Windows.Forms.TextBox();
             this.lbTipoDispositivo = new System.Windows.Forms.Label();
-            this.CmbTipodispositivo = new System.Windows.Forms.ComboBox();
+            this.CmbDispositivo = new System.Windows.Forms.ComboBox();
             this.lbId = new System.Windows.Forms.Label();
-            this.CmbId = new System.Windows.Forms.ComboBox();
-            this.btnBuscar = new System.Windows.Forms.Button();
+            this.CmbMac = new System.Windows.Forms.ComboBox();
+            this.btnBuscarMac = new System.Windows.Forms.Button();
             this.lbToken = new System.Windows.Forms.Label();
             this.TbToken = new System.Windows.Forms.TextBox();
             this.GenerarToken = new System.Windows.Forms.Button();
+            this.BtnBuscarDispo = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lbCodEmpresa
             // 
             this.lbCodEmpresa.AutoSize = true;
             this.lbCodEmpresa.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbCodEmpresa.Location = new System.Drawing.Point(13, 43);
+            this.lbCodEmpresa.Location = new System.Drawing.Point(132, 60);
             this.lbCodEmpresa.Name = "lbCodEmpresa";
             this.lbCodEmpresa.Size = new System.Drawing.Size(121, 23);
             this.lbCodEmpresa.TabIndex = 4;
@@ -58,7 +59,7 @@ namespace Generador_Token
             // 
             this.TxtCodEmpresa.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TxtCodEmpresa.ForeColor = System.Drawing.Color.DarkGreen;
-            this.TxtCodEmpresa.Location = new System.Drawing.Point(167, 43);
+            this.TxtCodEmpresa.Location = new System.Drawing.Point(286, 60);
             this.TxtCodEmpresa.MaximumSize = new System.Drawing.Size(300, 4);
             this.TxtCodEmpresa.Name = "TxtCodEmpresa";
             this.TxtCodEmpresa.Size = new System.Drawing.Size(268, 26);
@@ -69,60 +70,61 @@ namespace Generador_Token
             // 
             this.lbTipoDispositivo.AutoSize = true;
             this.lbTipoDispositivo.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbTipoDispositivo.Location = new System.Drawing.Point(13, 91);
+            this.lbTipoDispositivo.Location = new System.Drawing.Point(132, 125);
             this.lbTipoDispositivo.Name = "lbTipoDispositivo";
             this.lbTipoDispositivo.Size = new System.Drawing.Size(138, 23);
             this.lbTipoDispositivo.TabIndex = 3;
             this.lbTipoDispositivo.Text = "Tipo Dispositivo:";
             // 
-            // CmbTipodispositivo
+            // CmbDispositivo
             // 
-            this.CmbTipodispositivo.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CmbTipodispositivo.FormattingEnabled = true;
-            this.CmbTipodispositivo.Location = new System.Drawing.Point(167, 91);
-            this.CmbTipodispositivo.Name = "CmbTipodispositivo";
-            this.CmbTipodispositivo.Size = new System.Drawing.Size(268, 26);
-            this.CmbTipodispositivo.TabIndex = 7;
-            this.CmbTipodispositivo.Text = "Seleccione un dispositivo";
+            this.CmbDispositivo.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CmbDispositivo.FormattingEnabled = true;
+            this.CmbDispositivo.Location = new System.Drawing.Point(286, 125);
+            this.CmbDispositivo.Name = "CmbDispositivo";
+            this.CmbDispositivo.Size = new System.Drawing.Size(268, 26);
+            this.CmbDispositivo.TabIndex = 7;
+            this.CmbDispositivo.Text = "Seleccione un dispositivo";
+            this.CmbDispositivo.SelectedIndexChanged += new System.EventHandler(this.CmbTipodispositivo_SelectedIndexChanged);
             // 
             // lbId
             // 
             this.lbId.AutoSize = true;
             this.lbId.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbId.Location = new System.Drawing.Point(13, 141);
+            this.lbId.Location = new System.Drawing.Point(132, 194);
             this.lbId.Name = "lbId";
             this.lbId.Size = new System.Drawing.Size(115, 23);
             this.lbId.TabIndex = 2;
             this.lbId.Text = "Identificador:";
             // 
-            // CmbId
+            // CmbMac
             // 
-            this.CmbId.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CmbId.FormattingEnabled = true;
-            this.CmbId.Location = new System.Drawing.Point(167, 141);
-            this.CmbId.Name = "CmbId";
-            this.CmbId.Size = new System.Drawing.Size(268, 26);
-            this.CmbId.TabIndex = 6;
-            this.CmbId.Text = "Seleccione direccion Mac";
+            this.CmbMac.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CmbMac.FormattingEnabled = true;
+            this.CmbMac.Location = new System.Drawing.Point(286, 194);
+            this.CmbMac.Name = "CmbMac";
+            this.CmbMac.Size = new System.Drawing.Size(268, 26);
+            this.CmbMac.TabIndex = 6;
+            this.CmbMac.Text = "Seleccione direccion Mac";
             // 
-            // btnBuscar
+            // btnBuscarMac
             // 
-            this.btnBuscar.BackColor = System.Drawing.Color.DodgerBlue;
-            this.btnBuscar.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnBuscar.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnBuscar.Location = new System.Drawing.Point(267, 182);
-            this.btnBuscar.Name = "btnBuscar";
-            this.btnBuscar.Size = new System.Drawing.Size(168, 38);
-            this.btnBuscar.TabIndex = 9;
-            this.btnBuscar.Text = "Buscar Dispositivo";
-            this.btnBuscar.UseVisualStyleBackColor = false;
-            this.btnBuscar.Click += new System.EventHandler(this.btnBuscar_Click);
+            this.btnBuscarMac.BackColor = System.Drawing.Color.DodgerBlue;
+            this.btnBuscarMac.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBuscarMac.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.btnBuscarMac.Location = new System.Drawing.Point(395, 345);
+            this.btnBuscarMac.Name = "btnBuscarMac";
+            this.btnBuscarMac.Size = new System.Drawing.Size(116, 38);
+            this.btnBuscarMac.TabIndex = 9;
+            this.btnBuscarMac.Text = "Buscar Mac";
+            this.btnBuscarMac.UseVisualStyleBackColor = false;
+            this.btnBuscarMac.Click += new System.EventHandler(this.btnBuscar_Click);
             // 
             // lbToken
             // 
             this.lbToken.AutoSize = true;
             this.lbToken.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbToken.Location = new System.Drawing.Point(12, 273);
+            this.lbToken.Location = new System.Drawing.Point(131, 262);
             this.lbToken.Name = "lbToken";
             this.lbToken.Size = new System.Drawing.Size(122, 23);
             this.lbToken.TabIndex = 0;
@@ -133,7 +135,7 @@ namespace Generador_Token
             this.TbToken.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.TbToken.Font = new System.Drawing.Font("Arial Rounded MT Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TbToken.ForeColor = System.Drawing.Color.FloralWhite;
-            this.TbToken.Location = new System.Drawing.Point(167, 273);
+            this.TbToken.Location = new System.Drawing.Point(286, 262);
             this.TbToken.Name = "TbToken";
             this.TbToken.ReadOnly = true;
             this.TbToken.Size = new System.Drawing.Size(268, 26);
@@ -146,7 +148,7 @@ namespace Generador_Token
             this.GenerarToken.BackColor = System.Drawing.Color.ForestGreen;
             this.GenerarToken.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.GenerarToken.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.GenerarToken.Location = new System.Drawing.Point(304, 314);
+            this.GenerarToken.Location = new System.Drawing.Point(517, 345);
             this.GenerarToken.Name = "GenerarToken";
             this.GenerarToken.Size = new System.Drawing.Size(131, 38);
             this.GenerarToken.TabIndex = 5;
@@ -154,16 +156,30 @@ namespace Generador_Token
             this.GenerarToken.UseVisualStyleBackColor = false;
             this.GenerarToken.Click += new System.EventHandler(this.GenerarToken_Click);
             // 
+            // BtnBuscarDispo
+            // 
+            this.BtnBuscarDispo.BackColor = System.Drawing.Color.DodgerBlue;
+            this.BtnBuscarDispo.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BtnBuscarDispo.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.BtnBuscarDispo.Location = new System.Drawing.Point(221, 345);
+            this.BtnBuscarDispo.Name = "BtnBuscarDispo";
+            this.BtnBuscarDispo.Size = new System.Drawing.Size(168, 38);
+            this.BtnBuscarDispo.TabIndex = 11;
+            this.BtnBuscarDispo.Text = "Buscar Dispositivo";
+            this.BtnBuscarDispo.UseVisualStyleBackColor = false;
+            this.BtnBuscarDispo.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
-            this.ClientSize = new System.Drawing.Size(447, 395);
+            this.ClientSize = new System.Drawing.Size(660, 397);
+            this.Controls.Add(this.BtnBuscarDispo);
             this.Controls.Add(this.TxtCodEmpresa);
-            this.Controls.Add(this.btnBuscar);
-            this.Controls.Add(this.CmbTipodispositivo);
-            this.Controls.Add(this.CmbId);
+            this.Controls.Add(this.btnBuscarMac);
+            this.Controls.Add(this.CmbDispositivo);
+            this.Controls.Add(this.CmbMac);
             this.Controls.Add(this.GenerarToken);
             this.Controls.Add(this.lbCodEmpresa);
             this.Controls.Add(this.lbTipoDispositivo);
@@ -182,17 +198,17 @@ namespace Generador_Token
         public TextBox TxtCodEmpresa;
 
         private System.Windows.Forms.Label lbTipoDispositivo;
-        public System.Windows.Forms.ComboBox CmbTipodispositivo;
+        public System.Windows.Forms.ComboBox CmbDispositivo;
 
         private System.Windows.Forms.Label lbId;
-        private System.Windows.Forms.ComboBox CmbId;
+        private System.Windows.Forms.ComboBox CmbMac;
         
-        private Button btnBuscar;
+        private Button btnBuscarMac;
         
         private System.Windows.Forms.Label lbToken;
         private System.Windows.Forms.TextBox TbToken;
         private System.Windows.Forms.Button GenerarToken;
-
+        private Button BtnBuscarDispo;
     }
 }
 
