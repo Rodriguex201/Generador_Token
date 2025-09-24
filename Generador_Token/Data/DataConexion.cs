@@ -31,7 +31,12 @@ namespace Generador_Token.Data
         }
         public static void GetConnectionString(List<EmpresaModel> empresa)
         {
-            connectionString = $"Database = a000; Data Source = 168.232.32.74; User Id = RmSoft20X; Password= *LiLo89*; ConvertZeroDateTime=True";
+            //connectionString = $"Database = b516; Data Source = 168.232.32.74; User Id = RmSoft20X; Password= *LiLo89*; ConvertZeroDateTime=True";
+            
+            connectionString = $"Database = b516; Data Source = 200.118.190.213; User Id = RmSoft20X; Password= *LiLo89*; ConvertZeroDateTime=True";
+
+            //connectionString = $"Database = B517; Data Source = 200.118.190.167; User Id = RmSoft20X; Password= *LiLo89*; ConvertZeroDateTime=True";
+
             //connectionString = "Database = login; Data Source = localhost; User Id = root; Password= 1234";
         }
 

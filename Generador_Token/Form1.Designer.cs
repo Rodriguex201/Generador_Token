@@ -15,6 +15,9 @@ namespace Generador_Token
         /// Limpiar los recursos que se estén usando.
         /// </summary>
         /// <param name="disposing">true si los recursos administrados se deben desechar; false en caso contrario.</param>
+        /// 
+
+        //public static DataBase Context { get; set; }
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -64,7 +67,7 @@ namespace Generador_Token
             this.TxtCodEmpresa.Name = "TxtCodEmpresa";
             this.TxtCodEmpresa.Size = new System.Drawing.Size(268, 26);
             this.TxtCodEmpresa.TabIndex = 10;
-            this.TxtCodEmpresa.Text = "A000";
+            this.TxtCodEmpresa.Text = "";
             // 
             // lbTipoDispositivo
             // 

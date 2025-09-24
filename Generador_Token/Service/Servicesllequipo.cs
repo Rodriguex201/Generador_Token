@@ -57,7 +57,7 @@ namespace Generador_Token.Services
         //    try
         //    {
         //        DataConexion.GetConnectionString(new List<Models.EmpresaModel>());
-        //        var conexionDB = await DataConexion.Conectar();
+        //        var conexionDB = await DataConexion.ObtenerConexion();
 
         //        //DataConexion.Abrir();
 

@@ -18,9 +18,9 @@ namespace Generador_Token.Service
             List<string> lista = new List<string>();
             try
             {
-                DataConexion.Abrir();
                 //string query = $"SELECT * FROM empresas.llequipo where maquina = '{dispositivo}'";
                 string query = $"SELECT DISTINCT nro_mac FROM empresas.llequipo where maquina = '{dispositivo}'";
+                DataConexion.Abrir();
                 MySqlCommand cmd = new MySqlCommand(query);
 
                 MySqlDataReader reader = null;

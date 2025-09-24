@@ -16,17 +16,20 @@ namespace Generador_Token
     {
         string codigoMac;
         string dispositivoSelect;
-        string empresa;
+        public string empresa;
         public Form1()
         {
             InitializeComponent();
-            empresa = TxtCodEmpresa.Text;
-            //var codigoEmpresa = ;
-            
-            
+            //ConectionDatabase();
+        }
+
+        private static void ConectionDatabase()
+        {
 
         }
 
+        //--------------------GENERADOR DE TOKEN---------------------------
+        //Boton que genera el token una vez seleccionados el dispositivo y la mac
         private async void GenerarToken_Click(object sender, EventArgs e)
         {
             dispositivoSelect = CmbDispositivo.SelectedItem?.ToString(); // se obtiene el dispositivo seleccionado
@@ -69,6 +72,7 @@ namespace Generador_Token
             }
         }
 
+        //Boton Para buscar la Mac segun el Dispositivo
         private void btnBuscar_Click(object sender, EventArgs e)
         {
             dispositivoSelect = CmbDispositivo.SelectedItem?.ToString(); // se obtiene la mac de los dispositivos seleccionados
@@ -90,9 +94,11 @@ namespace Generador_Token
 
         }
 
+        //Boton que realiza la busqueda de Dispositivos segun la Base de datos Empresa (A000)
         private void button1_Click(object sender, EventArgs e)
         {
             //CmbMac
+            empresa = TxtCodEmpresa.Text;
             var dispositivo = Servicesllequipo.ListaDispositivos(empresa).GetAwaiter().GetResult(); // se guarda la lista de dispositivos
             CmbDispositivo.Items.AddRange(dispositivo.ToArray()); // se agregan los dispositivos al ComboBox
             
