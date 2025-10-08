@@ -50,6 +50,90 @@ namespace Generador_Token.Services
             return lista;
         }
 
+        public static async Task<List<EmpresaModel>> Consultar (string codEmpresa)
+        {
+            var lista = new List<EmpresaModel>();
+            try
+            {
+                DataConexion.GetConnectionString(new List<EmpresaModel>()); // Cambiado a acceso estático
+                var conexionDB = await DataConexion.Conectar();
+                DataConexion.Abrir();
+
+                string query = $"select maquina, nro_mac, codigo_act FROM empresas.llequipo where empresa = '{codEmpresa}' ;";
+
+                using (MySqlCommand cmd = new MySqlCommand(query, conexionDB))
+                {
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var dispositivo = new EmpresaModel
+                            {
+                                maquina = reader["maquina"].ToString(),
+                                nro_mac = reader["nro_mac"].ToString(),
+                                //codigo_act = Convert.ToInt32(reader["codigo_act"].ToString())
+                                codigo_act = int.TryParse(reader["codigo_act"].ToString(), out int codigoActValue) ? codigoActValue : 0
+                            };
+                            lista.Add(dispositivo);
+                        }
+                    }
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar categorías: " + ex.Message);
+            }
+            finally
+            {
+                DataConexion.Cerrar();
+            }
+            return lista;
+
+        }
+
+        public static async Task<List<EmpresaModel>> Borrar(string codEmpresa)
+        {
+            var lista = new List<EmpresaModel>();
+            try
+            {
+                DataConexion.GetConnectionString(new List<EmpresaModel>()); // Cambiado a acceso estático
+                var conexionDB = await DataConexion.Conectar();
+                DataConexion.Abrir();
+
+                string query = $"select maquina, nro_mac, codigo_act FROM empresas.llequipo where empresa = '{codEmpresa}' ;";
+
+                using (MySqlCommand cmd = new MySqlCommand(query, conexionDB))
+                {
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var dispositivo = new EmpresaModel
+                            {
+                                maquina = reader["maquina"].ToString(),
+                                nro_mac = reader["nro_mac"].ToString(),
+                                //codigo_act = Convert.ToInt32(reader["codigo_act"].ToString())
+                                codigo_act = int.TryParse(reader["codigo_act"].ToString(), out int codigoActValue) ? codigoActValue : 0
+                            };
+                            lista.Add(dispositivo);
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar categorías: " + ex.Message);
+            }
+            finally
+            {
+                DataConexion.Cerrar();
+            }
+            return lista;
+
+        }
+
         //public static async Task<List<string>> ListaDispositivos(string codEmpresa)
         //{
         //    var lista = new List<string>();

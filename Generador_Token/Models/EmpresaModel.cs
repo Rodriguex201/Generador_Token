@@ -9,9 +9,9 @@ namespace Generador_Token.Models
     {   
         [PrimaryKey,AutoIncrement]
         public int Id { get; set; }
-        public string empresa { get; set; }
-        public string nro_mac { get; set; }
-        public string maquina { get; set; }
+        public string empresa { get; set; } // numero de empresa
+        public string nro_mac { get; set; } //id de dispositivo
+        public string maquina { get; set; } //tipo de dispositivo
         public string factivar { get; set; }
         public string facceso { get; set; }
         public string activar { get; set; }
@@ -28,6 +28,6 @@ namespace Generador_Token.Models
         public string sucursal { get; set; }
         public string ipserver { get; set; }
         public string serverPassword { get; set; }
-        public int codigo_act { get; set; }
+        public int codigo_act { get; set; } //token
     }
 }

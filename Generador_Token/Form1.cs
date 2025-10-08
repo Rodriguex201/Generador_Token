@@ -4,6 +4,7 @@ using Generador_Token.Service;
 using Generador_Token.Services;
 using MySqlConnector;
 using System;
+using System.Linq;
 using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ namespace Generador_Token
 {
     public partial class Form1 : Form
     {
+
+
         string codigoMac;
         string dispositivoSelect;
         public string empresa;
@@ -23,14 +26,9 @@ namespace Generador_Token
             //ConectionDatabase();
         }
 
-        private static void ConectionDatabase()
-        {
-
-        }
-
         //--------------------GENERADOR DE TOKEN---------------------------
         //Boton que genera el token una vez seleccionados el dispositivo y la mac
-        private async void GenerarToken_Click(object sender, EventArgs e)
+        private async void GenerarToken_Click(object sender, EventArgs e) //GENERAR TOKEN
         {
             dispositivoSelect = CmbDispositivo.SelectedItem?.ToString(); // se obtiene el dispositivo seleccionado
             codigoMac = CmbMac.SelectedItem?.ToString(); // se obtiene la MAC seleccionada
@@ -51,37 +49,60 @@ namespace Generador_Token
             
         }
 
-        private async void ProbarConexion()
-        {
-            try
-            {
-                DataConexion.GetConnectionString(new List<Models.EmpresaModel>()); // Cambiado a acceso estático
-                await DataConexion.Conectar(); // Cambiado a acceso estático
-                //DataConexion.Abrir(); // Cambiado a acceso estático
-                MessageBox.Show("Conexión exitosa");
-
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show("Error al conectar: " + ex.Message);
-            }
-            finally
-            {
-                DataConexion.Cerrar(); // Cambiado a acceso estático
-                
-            }
-        }
-
         //Boton Para buscar la Mac segun el Dispositivo
-        private void btnBuscar_Click(object sender, EventArgs e)
+        private void btnBuscar_Click(object sender, EventArgs e) //BUSCAR MAC
         {
             dispositivoSelect = CmbDispositivo.SelectedItem?.ToString(); // se obtiene la mac de los dispositivos seleccionados
 
             var mac = ServiceBuscarEquipo.ListaMac(dispositivoSelect).GetAwaiter().GetResult();// se obtiene la lista de MACs del dispositivo seleccionado
             CmbMac.Items.AddRange(mac.ToArray()); // se agregan las MACs al ComboBox
+        }
 
-            //Servicesllequipo.ListaDispositivos(codigo).GetAwaiter().GetResult();
-            //ServiceBuscarEquipo.ListaMac(tipoDispositivo);
+        
+
+        //Boton que realiza la busqueda de Dispositivos segun la Base de datos Empresa (A000)
+        private void button1_Click(object sender, EventArgs e) //BUSCAR DISPOSITIVOS
+        {
+            //CmbMac
+            empresa = TxtCodEmpresa.Text;
+            var dispositivo = Servicesllequipo.ListaDispositivos(empresa).GetAwaiter().GetResult(); // se guarda la lista de dispositivos
+            CmbDispositivo.Items.AddRange(dispositivo.ToArray()); // se agregan los dispositivos al ComboBox
+            
+           
+        }
+        private void btnBuscar_Click_1(object sender, EventArgs e)
+        {
+            empresa = txtEmpresa.Text;
+            try
+            {
+                if (string.IsNullOrWhiteSpace(empresa))
+                {
+                    MessageBox.Show("Por favor, ingrese un código de empresa válido.");
+                    return;
+                }
+                else
+                {
+                    var dispositivo = Servicesllequipo.Consultar(empresa).GetAwaiter().GetResult(); // se guarda la lista de dispositivos
+                    var listaFiltrada = dispositivo
+                        .Select(x => new
+                        {
+                            Dispositivo = x.maquina,
+                            MAC = x.nro_mac,
+                            Token = x.codigo_act
+                        })
+                        .ToList();
+
+                    Tabla.DataSource = listaFiltrada; // se agregan los dispositivos al ComboBox
+                    Tabla.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+                }
+                                                                                                // Proyectar solo los campos necesarios para mostrar
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar tabla: " + ex.Message);
+
+            }
         }
 
         private void tbToken_TextChanged(object sender, EventArgs e)
@@ -94,14 +115,9 @@ namespace Generador_Token
 
         }
 
-        //Boton que realiza la busqueda de Dispositivos segun la Base de datos Empresa (A000)
-        private void button1_Click(object sender, EventArgs e)
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            //CmbMac
-            empresa = TxtCodEmpresa.Text;
-            var dispositivo = Servicesllequipo.ListaDispositivos(empresa).GetAwaiter().GetResult(); // se guarda la lista de dispositivos
-            CmbDispositivo.Items.AddRange(dispositivo.ToArray()); // se agregan los dispositivos al ComboBox
-            
 
         }
     }
