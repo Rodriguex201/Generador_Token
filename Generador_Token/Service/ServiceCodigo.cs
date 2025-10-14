@@ -31,7 +31,15 @@ namespace Generador_Token.Service
 
                 long codigo8Digitos = Math.Abs(numero % 100000000);
 
-                return codigo8Digitos.ToString("D8");
+                //return codigo8Digitos.ToString("D8");
+                string codigoFinal = codigo8Digitos.ToString("D8");
+
+                if (codigoFinal.StartsWith("0"))
+                {
+                    codigoFinal = "9" + codigoFinal.Substring(1);
+                }
+
+                return codigoFinal;
             }
         }
 
