@@ -28,6 +28,8 @@ namespace Generador_Token
         {
             InitializeComponent();
             //ConectionDatabase();
+            BtnBuscarDispo.Visible = false;
+            btnBuscarMac.Visible = false;
         }
 
         private async void CargarDatos()
@@ -81,27 +83,17 @@ namespace Generador_Token
         }
 
         //Boton Para buscar la Mac segun el Dispositivo
-        private void btnBuscar_Click(object sender, EventArgs e) //BUSCAR MAC
+        private async void btnBuscar_Click(object sender, EventArgs e) //BUSCAR MAC
         {
-            CmbMac.Items.Clear(); // se limpia el ComboBox de MACs para evitar duplicados
-            dispositivoSelect = CmbDispositivo.SelectedItem?.ToString(); // se obtiene la mac de los dispositivos seleccionados
-
-            var mac = ServiceBuscarEquipo.ListaMac(dispositivoSelect).GetAwaiter().GetResult();// se obtiene la lista de MACs del dispositivo seleccionado
-            CmbMac.Items.AddRange(mac.ToArray()); // se agregan las MACs al ComboBox
+            await CargarMacsParaDispositivoAsync(CmbDispositivo.SelectedItem?.ToString());
         }
 
-        
+
 
         //Boton que realiza la busqueda de Dispositivos segun la Base de datos Empresa (A000)
-        private void button1_Click(object sender, EventArgs e) //BUSCAR DISPOSITIVOS
+        private async void button1_Click(object sender, EventArgs e) //BUSCAR DISPOSITIVOS
         {
-            //CmbMac
-            CmbDispositivo.Items.Clear(); // se limpia el ComboBox de dispositivos para evitar duplicados
-            empresa = TxtCodEmpresa.Text;
-            var dispositivo = Servicesllequipo.ListaDispositivos(empresa).GetAwaiter().GetResult(); // se guarda la lista de dispositivos
-            CmbDispositivo.Items.AddRange(dispositivo.ToArray()); // se agregan los dispositivos al ComboBox
-            
-           
+            await CargarDispositivosPorEmpresaAsync();
         }
         private void btnBuscar_Click_1(object sender, EventArgs e)  //CARGAR TABLA
         {
@@ -145,9 +137,9 @@ namespace Generador_Token
 
         }
 
-        private void CmbTipodispositivo_SelectedIndexChanged(object sender, EventArgs e)
+        private async void CmbTipodispositivo_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            await CargarMacsParaDispositivoAsync(CmbDispositivo.SelectedItem?.ToString());
         }
 
 
@@ -184,6 +176,64 @@ namespace Generador_Token
             {
                 MessageBox.Show("Error al intentar borrar: " + ex.Message);
             }
+        }
+
+        private async Task CargarDispositivosPorEmpresaAsync()
+        {
+            empresa = TxtCodEmpresa.Text.Trim();
+
+            CmbDispositivo.Items.Clear();
+            CmbMac.Items.Clear();
+
+            if (string.IsNullOrWhiteSpace(empresa))
+            {
+                return;
+            }
+
+            try
+            {
+                var dispositivos = await Servicesllequipo.ListaDispositivos(empresa);
+
+                if (dispositivos != null && dispositivos.Count > 0)
+                {
+                    CmbDispositivo.Items.AddRange(dispositivos.ToArray());
+                    CmbDispositivo.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar dispositivos: " + ex.Message);
+            }
+        }
+
+        private async Task CargarMacsParaDispositivoAsync(string dispositivo)
+        {
+            CmbMac.Items.Clear();
+
+            if (string.IsNullOrWhiteSpace(dispositivo))
+            {
+                return;
+            }
+
+            try
+            {
+                var macs = await ServiceBuscarEquipo.ListaMac(dispositivo);
+
+                if (macs != null && macs.Count > 0)
+                {
+                    CmbMac.Items.AddRange(macs.ToArray());
+                    CmbMac.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar direcciones MAC: " + ex.Message);
+            }
+        }
+
+        private async void TxtCodEmpresa_TextChanged(object sender, EventArgs e)
+        {
+            await CargarDispositivosPorEmpresaAsync();
         }
     }
 }

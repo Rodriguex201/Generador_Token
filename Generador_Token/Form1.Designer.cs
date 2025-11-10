@@ -80,6 +80,7 @@ namespace Generador_Token
             this.TxtCodEmpresa.Name = "TxtCodEmpresa";
             this.TxtCodEmpresa.Size = new System.Drawing.Size(268, 26);
             this.TxtCodEmpresa.TabIndex = 10;
+            this.TxtCodEmpresa.TextChanged += new System.EventHandler(this.TxtCodEmpresa_TextChanged);
             // 
             // lbTipoDispositivo
             // 
