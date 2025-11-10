@@ -74,6 +74,7 @@ namespace Generador_Token
 
 
                 TbToken.Text = codigo; // se muestra el código generado en el TextBox
+                await CargarMacsParaDispositivoAsync(dispositivoSelect);
             }
             else
             {
@@ -215,9 +216,20 @@ namespace Generador_Token
                 return;
             }
 
+            var codigoEmpresa = empresa;
+            if (string.IsNullOrWhiteSpace(codigoEmpresa))
+            {
+                codigoEmpresa = TxtCodEmpresa.Text.Trim();
+            }
+
+            if (string.IsNullOrWhiteSpace(codigoEmpresa))
+            {
+                return;
+            }
+
             try
             {
-                var macs = await ServiceBuscarEquipo.ListaMac(dispositivo);
+                var macs = await ServiceBuscarEquipo.ListaMac(codigoEmpresa, dispositivo);
 
                 if (macs != null && macs.Count > 0)
                 {
