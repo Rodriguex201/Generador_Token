@@ -59,7 +59,7 @@ namespace Generador_Token.Services
                 var conexionDB = await DataConexion.Conectar();
                 DataConexion.Abrir();
 
-                string query = $"select maquina, nro_mac, codigo_act FROM empresas.llequipo where empresa = '{codEmpresa}' ;";
+                string query = $"select maquina, nro_mac, codigo_act, modulos FROM empresas.llequipo where empresa = '{codEmpresa}' ;";
 
                 using (MySqlCommand cmd = new MySqlCommand(query, conexionDB))
                 {
@@ -71,6 +71,7 @@ namespace Generador_Token.Services
                             {
                                 maquina = reader["maquina"].ToString(),
                                 nro_mac = reader["nro_mac"].ToString(),
+                                modulos = reader["modulos"].ToString(),
                                 //codigo_act = Convert.ToInt32(reader["codigo_act"].ToString())
                                 codigo_act = int.TryParse(reader["codigo_act"].ToString(), out int codigoActValue) ? codigoActValue : 0
                             };
