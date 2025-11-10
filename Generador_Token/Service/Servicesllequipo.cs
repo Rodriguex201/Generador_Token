@@ -61,8 +61,10 @@ namespace Generador_Token.Services
                 var conexionDB = await DataConexion.Conectar();
                 DataConexion.Abrir();
 
+
                 string query = "SELECT maquina, nro_mac, codigo_act, modulos FROM empresas.llequipo " +
                                "WHERE empresa = @empresa AND modulos IN ('M10','M12');";
+
 
                 using (MySqlCommand cmd = new MySqlCommand(query, conexionDB))
                 {
