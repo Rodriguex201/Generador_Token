@@ -40,7 +40,7 @@ namespace Generador_Token
                 DataConexion.Abrir();
 
                 // Consulta
-                string query = $"SELECT maquina, nro_mac, codigo_act FROM empresas.llequipo where '{empresa}'";
+                string query = $"SELECT maquina, nro_mac, modulos, codigo_act FROM empresas.llequipo where '{empresa}'";
 
                 using (MySqlCommand cmd = new MySqlCommand(query, conexionDB))
                 using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
@@ -116,11 +116,13 @@ namespace Generador_Token
                 else
                 {
                     var dispositivo = Servicesllequipo.Consultar(empresa).GetAwaiter().GetResult(); // se guarda la lista de dispositivos
+                    // M10: Pedidos(Distribuicion) y M12: Restaurantes
                     var listaFiltrada = dispositivo
                         .Select(x => new
                         {
                             Dispositivo = x.maquina,
                             MAC = x.nro_mac,
+                            Modulos = x.modulos,
                             Token = x.codigo_act
                         })
                         .ToList();
