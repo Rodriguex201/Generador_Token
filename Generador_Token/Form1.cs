@@ -116,6 +116,7 @@ namespace Generador_Token
                 else
                 {
                     var dispositivo = Servicesllequipo.Consultar(empresa).GetAwaiter().GetResult(); // se guarda la lista de dispositivos
+                    // M10: Pedidos(Distribuicion) y M12: Restaurantes
                     var listaFiltrada = dispositivo
                         .Select(x => new
                         {
