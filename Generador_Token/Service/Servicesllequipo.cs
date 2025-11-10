@@ -21,11 +21,13 @@ namespace Generador_Token.Services
                 var conexionDB = await DataConexion.Conectar();
                 DataConexion.Abrir();
 
-                string query = $"SELECT DISTINCT maquina FROM empresas.llequipo WHERE empresa = '{codEmpresa}' ORDER BY maquina ASC;";
+                string query = "SELECT DISTINCT maquina FROM empresas.llequipo WHERE empresa = @empresa " +
+                               "AND modulos IN ('M10','M12') ORDER BY maquina ASC;";
 
                 MySqlCommand cmd = new MySqlCommand(query);
                 MySqlDataReader reader = null;
                 cmd.Connection = conexionDB;
+                cmd.Parameters.AddWithValue("@empresa", codEmpresa);
 
                 reader = cmd.ExecuteReader();
                 if (reader.HasRows)
@@ -59,10 +61,14 @@ namespace Generador_Token.Services
                 var conexionDB = await DataConexion.Conectar();
                 DataConexion.Abrir();
 
-                string query = $"select maquina, nro_mac, codigo_act, modulos FROM empresas.llequipo where empresa = '{codEmpresa}' ;";
+
+                string query = "SELECT maquina, nro_mac, codigo_act, modulos FROM empresas.llequipo " +
+                               "WHERE empresa = @empresa AND modulos IN ('M10','M12');";
+
 
                 using (MySqlCommand cmd = new MySqlCommand(query, conexionDB))
                 {
+                    cmd.Parameters.AddWithValue("@empresa", codEmpresa);
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
