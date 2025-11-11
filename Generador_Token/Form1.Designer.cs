@@ -54,6 +54,7 @@ namespace Generador_Token
             this.lbCodEmpre = new System.Windows.Forms.Label();
             this.Tabla = new System.Windows.Forms.DataGridView();
             this.btnBuscar = new System.Windows.Forms.Button();
+            this.lbModuloInfo = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Generar_Token.SuspendLayout();
             this.Consultar_Token.SuspendLayout();
@@ -79,6 +80,7 @@ namespace Generador_Token
             this.TxtCodEmpresa.Name = "TxtCodEmpresa";
             this.TxtCodEmpresa.Size = new System.Drawing.Size(268, 26);
             this.TxtCodEmpresa.TabIndex = 10;
+            this.TxtCodEmpresa.TextChanged += new System.EventHandler(this.TxtCodEmpresa_TextChanged);
             // 
             // lbTipoDispositivo
             // 
@@ -217,6 +219,7 @@ namespace Generador_Token
             // 
             // Consultar_Token
             // 
+            this.Consultar_Token.Controls.Add(this.lbModuloInfo);
             this.Consultar_Token.Controls.Add(this.button1);
             this.Consultar_Token.Controls.Add(this.txtEmpresa);
             this.Consultar_Token.Controls.Add(this.lbCodEmpre);
@@ -291,9 +294,20 @@ namespace Generador_Token
             this.btnBuscar.Text = "BUSCAR";
             this.btnBuscar.UseVisualStyleBackColor = false;
             this.btnBuscar.Click += new System.EventHandler(this.btnBuscar_Click_1);
-            // 
+            //
+            // lbModuloInfo
+            //
+            this.lbModuloInfo.AutoSize = true;
+            this.lbModuloInfo.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbModuloInfo.ForeColor = System.Drawing.Color.DimGray;
+            this.lbModuloInfo.Location = new System.Drawing.Point(12, 46);
+            this.lbModuloInfo.Name = "lbModuloInfo";
+            this.lbModuloInfo.Size = new System.Drawing.Size(260, 19);
+            this.lbModuloInfo.TabIndex = 14;
+            this.lbModuloInfo.Text = "M10: Pedidos (Distribución) | M12: Restaurantes";
+            //
             // Form1
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
@@ -335,6 +349,7 @@ namespace Generador_Token
         private DataGridView Tabla;
         private Label lbCodEmpre;
         private Button button1;
+        private Label lbModuloInfo;
     }
 }
 
