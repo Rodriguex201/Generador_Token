@@ -22,7 +22,9 @@ namespace Generador_Token.Services
                 DataConexion.Abrir();
 
                 string query = "SELECT DISTINCT maquina FROM empresas.llequipo WHERE empresa = @empresa " +
+
                                "AND modulos IN ('M10','M12','M') ORDER BY maquina ASC;";
+
 
                 MySqlCommand cmd = new MySqlCommand(query);
                 MySqlDataReader reader = null;
@@ -62,7 +64,9 @@ namespace Generador_Token.Services
                 DataConexion.Abrir();
 
                 string query = "SELECT maquina, nro_mac, codigo_act, modulos FROM empresas.llequipo " +
+
                                "WHERE empresa = @empresa AND modulos IN ('M10','M12','M');";
+
 
                 using (MySqlCommand cmd = new MySqlCommand(query, conexionDB))
                 {
