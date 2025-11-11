@@ -304,7 +304,7 @@ namespace Generador_Token
             this.lbModuloInfo.Name = "lbModuloInfo";
             this.lbModuloInfo.Size = new System.Drawing.Size(260, 19);
             this.lbModuloInfo.TabIndex = 14;
-            this.lbModuloInfo.Text = "M10: Pedidos (Distribución) | M12: Restaurantes";
+            this.lbModuloInfo.Text = "M10: Pedidos (Distribución) | M12: Restaurantes | M: Pendientes por asignacion de modulo";
             //
             // Form1
             //
