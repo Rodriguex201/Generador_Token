@@ -332,7 +332,7 @@ namespace Generador_Token
             this.ClientSize = new System.Drawing.Size(679, 387);
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
-            this.Text = "Codigo y Registro Equipo";
+            this.Text = "TokenManager";
             this.tabControl1.ResumeLayout(false);
             this.Generar_Token.ResumeLayout(false);
             this.Generar_Token.PerformLayout();
