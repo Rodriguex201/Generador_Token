@@ -168,7 +168,14 @@ namespace Generador_Token
                         .Where(x => !string.IsNullOrWhiteSpace(x.modulos) &&
                                     x.modulos.IndexOf("M", StringComparison.OrdinalIgnoreCase) >= 0)
 
-                        .Select(CrearFilaConsulta)
+                        .Select((x, index) => new
+                        {
+                            Fila = CrearFilaConsulta(x),
+                            OrdenOriginal = index
+                        })
+                        .OrderByDescending(x => EsModuloPendiente(x.Fila.Modulos))
+                        .ThenBy(x => x.OrdenOriginal)
+                        .Select(x => x.Fila)
 
                         .ToList();
 
@@ -271,6 +278,7 @@ namespace Generador_Token
             Tabla.DataSource = new BindingList<ConsultaTokenRow>(datosFiltrados.ToList());
             Tabla.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
+
             if (Tabla.Columns.Contains(nameof(ConsultaTokenRow.FechaActivacion)))
             {
                 var columnaFecha = Tabla.Columns[nameof(ConsultaTokenRow.FechaActivacion)];
@@ -279,6 +287,12 @@ namespace Generador_Token
             }
 
             _fechaFiltroActiva = fecha;
+        }
+
+        private bool EsModuloPendiente(string modulos)
+        {
+            return string.Equals(modulos?.Trim(), "M", StringComparison.OrdinalIgnoreCase);
+
         }
 
         private void button1_Click_1(object sender, EventArgs e)  //BORRAR REGISTRO
