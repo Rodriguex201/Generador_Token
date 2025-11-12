@@ -27,7 +27,7 @@ namespace Generador_Token.Data
                 //throw;
                 return null;
 
-            }
+            } 
         }
         public static void GetConnectionString(List<EmpresaModel> empresa)
         {
