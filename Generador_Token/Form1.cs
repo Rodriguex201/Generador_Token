@@ -167,7 +167,9 @@ namespace Generador_Token
                     _datosConsultaToken = dispositivo
                         .Where(x => !string.IsNullOrWhiteSpace(x.modulos) &&
                                     x.modulos.IndexOf("M", StringComparison.OrdinalIgnoreCase) >= 0)
+
                         .Select(CrearFilaConsulta)
+
                         .ToList();
 
                     AplicarFiltro(null);
