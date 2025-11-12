@@ -7,6 +7,7 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -25,6 +26,20 @@ namespace Generador_Token
         string codigoMac;
         string dispositivoSelect;
         public string empresa;
+        private List<ConsultaTokenRow> _datosConsultaToken = new List<ConsultaTokenRow>();
+        private DateTime? _fechaFiltroActiva;
+
+        private class ConsultaTokenRow
+        {
+            public string FechaActivacion { get; set; }
+            public string Dispositivo { get; set; }
+            public string MAC { get; set; }
+            public string Modulos { get; set; }
+            public string Token { get; set; }
+
+            [Browsable(false)]
+            public DateTime? FechaActivacionValor { get; set; }
+        }
 
         public Form1()
         {
@@ -149,20 +164,13 @@ namespace Generador_Token
                 {
                     var dispositivo = Servicesllequipo.Consultar(empresa).GetAwaiter().GetResult(); // se guarda la lista de dispositivos
                     // M10: Pedidos(Distribuicion) y M12: Restaurantes
-                    var listaFiltrada = dispositivo
+                    _datosConsultaToken = dispositivo
                         .Where(x => !string.IsNullOrWhiteSpace(x.modulos) &&
                                     x.modulos.IndexOf("M", StringComparison.OrdinalIgnoreCase) >= 0)
-                        .Select(x => new
-                        {
-                            Dispositivo = x.maquina,
-                            MAC = x.nro_mac,
-                            Modulos = x.modulos,
-                            Token = x.codigo_act
-                        })
+                        .Select(CrearFilaConsulta)
                         .ToList();
 
-                    Tabla.DataSource = listaFiltrada; // se agregan los dispositivos al ComboBox
-                    Tabla.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                    AplicarFiltro(null);
 
                 }
                                                                                                 // Proyectar solo los campos necesarios para mostrar
@@ -187,7 +195,88 @@ namespace Generador_Token
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+            {
+                return;
+            }
 
+            var columnaSeleccionada = Tabla.Columns[e.ColumnIndex];
+            if (columnaSeleccionada == null || columnaSeleccionada.Name != nameof(ConsultaTokenRow.FechaActivacion))
+            {
+                return;
+            }
+
+            if (Tabla.Rows[e.RowIndex].DataBoundItem is ConsultaTokenRow fila && fila.FechaActivacionValor.HasValue)
+            {
+                var fechaSeleccionada = fila.FechaActivacionValor.Value.Date;
+
+                if (_fechaFiltroActiva.HasValue && _fechaFiltroActiva.Value.Date == fechaSeleccionada)
+                {
+                    AplicarFiltro(null);
+                }
+                else
+                {
+                    AplicarFiltro(fechaSeleccionada);
+                }
+            }
+        }
+
+        private ConsultaTokenRow CrearFilaConsulta(EmpresaModel dispositivo)
+        {
+            var fecha = ObtenerFecha(dispositivo.factivar);
+            return new ConsultaTokenRow
+            {
+                FechaActivacion = fecha.HasValue ? fecha.Value.ToString("dd/MM/yyyy HH:mm") : string.Empty,
+                FechaActivacionValor = fecha,
+                Dispositivo = dispositivo.maquina,
+                MAC = dispositivo.nro_mac,
+                Modulos = dispositivo.modulos,
+                Token = dispositivo.codigo_act == 0 ? string.Empty : dispositivo.codigo_act.ToString()
+            };
+        }
+
+        private DateTime? ObtenerFecha(string valor)
+        {
+            if (string.IsNullOrWhiteSpace(valor))
+            {
+                return null;
+            }
+
+            if (DateTime.TryParseExact(valor, new[] { "dd/MM/yyyy HH:mm", "dd/MM/yyyy HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd" },
+                System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out var fechaExacta))
+            {
+                return fechaExacta;
+            }
+
+            if (DateTime.TryParse(valor, out var fechaLibre))
+            {
+                return fechaLibre;
+            }
+
+            return null;
+        }
+
+        private void AplicarFiltro(DateTime? fecha)
+        {
+            IEnumerable<ConsultaTokenRow> datosFiltrados = _datosConsultaToken;
+
+            if (fecha.HasValue)
+            {
+                datosFiltrados = datosFiltrados
+                    .Where(fila => fila.FechaActivacionValor.HasValue && fila.FechaActivacionValor.Value.Date == fecha.Value.Date);
+            }
+
+            Tabla.DataSource = new BindingList<ConsultaTokenRow>(datosFiltrados.ToList());
+            Tabla.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            if (Tabla.Columns.Contains(nameof(ConsultaTokenRow.FechaActivacion)))
+            {
+                var columnaFecha = Tabla.Columns[nameof(ConsultaTokenRow.FechaActivacion)];
+                columnaFecha.DisplayIndex = 0;
+                columnaFecha.HeaderText = "Fecha activación";
+            }
+
+            _fechaFiltroActiva = fecha;
         }
 
         private void button1_Click_1(object sender, EventArgs e)  //BORRAR REGISTRO
