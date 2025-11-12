@@ -64,7 +64,6 @@ namespace Generador_Token.Services
                 DataConexion.Abrir();
 
                 string query = "SELECT maquina, nro_mac, codigo_act, modulos FROM empresas.llequipo " +
-
                                "WHERE empresa = @empresa AND modulos IN ('M10','M12','M');";
 
 

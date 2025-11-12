@@ -94,7 +94,38 @@ namespace Generador_Token
         //Boton que realiza la busqueda de Dispositivos segun la Base de datos Empresa (A000)
         private async void button1_Click(object sender, EventArgs e) //BUSCAR DISPOSITIVOS
         {
-            await CargarDispositivosPorEmpresaAsync();
+
+            var dispositivoActual = CmbDispositivo.SelectedItem?.ToString();
+            var macActual = CmbMac.SelectedItem?.ToString();
+
+            await CargarDispositivosPorEmpresaAsync(dispositivoActual);
+
+            var dispositivoSeleccionado = CmbDispositivo.SelectedItem?.ToString();
+            if (!string.IsNullOrWhiteSpace(dispositivoSeleccionado))
+            {
+                await CargarMacsParaDispositivoAsync(dispositivoSeleccionado, macActual);
+            }
+        }
+
+        private async void btnRefrescarGenerar_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(TxtCodEmpresa.Text))
+            {
+                MessageBox.Show("Ingrese un código de empresa para refrescar los datos.");
+                return;
+            }
+
+            var dispositivoActual = CmbDispositivo.SelectedItem?.ToString();
+            var macActual = CmbMac.SelectedItem?.ToString();
+
+            await CargarDispositivosPorEmpresaAsync(dispositivoActual);
+
+            var dispositivoSeleccionado = CmbDispositivo.SelectedItem?.ToString();
+            if (!string.IsNullOrWhiteSpace(dispositivoSeleccionado))
+            {
+                await CargarMacsParaDispositivoAsync(dispositivoSeleccionado, macActual);
+            }
+
         }
         private void btnBuscar_Click_1(object sender, EventArgs e)  //CARGAR TABLA
         {
@@ -181,7 +212,9 @@ namespace Generador_Token
             }
         }
 
-        private async Task CargarDispositivosPorEmpresaAsync()
+
+        private async Task CargarDispositivosPorEmpresaAsync(string dispositivoSeleccionado = null)
+
         {
             empresa = TxtCodEmpresa.Text.Trim();
 
@@ -200,7 +233,16 @@ namespace Generador_Token
                 if (dispositivos != null && dispositivos.Count > 0)
                 {
                     CmbDispositivo.Items.AddRange(dispositivos.ToArray());
-                    CmbDispositivo.SelectedIndex = 0;
+
+                    if (!string.IsNullOrWhiteSpace(dispositivoSeleccionado) && dispositivos.Contains(dispositivoSeleccionado))
+                    {
+                        CmbDispositivo.SelectedItem = dispositivoSeleccionado;
+                    }
+                    else
+                    {
+                        CmbDispositivo.SelectedIndex = 0;
+                    }
+
                 }
             }
             catch (Exception ex)
@@ -209,7 +251,9 @@ namespace Generador_Token
             }
         }
 
-        private async Task CargarMacsParaDispositivoAsync(string dispositivo)
+
+        private async Task CargarMacsParaDispositivoAsync(string dispositivo, string macSeleccionada = null)
+
         {
             CmbMac.Items.Clear();
 
@@ -236,7 +280,16 @@ namespace Generador_Token
                 if (macs != null && macs.Count > 0)
                 {
                     CmbMac.Items.AddRange(macs.ToArray());
-                    CmbMac.SelectedIndex = 0;
+
+                    if (!string.IsNullOrWhiteSpace(macSeleccionada) && macs.Contains(macSeleccionada))
+                    {
+                        CmbMac.SelectedItem = macSeleccionada;
+                    }
+                    else
+                    {
+                        CmbMac.SelectedIndex = 0;
+                    }
+
                 }
             }
             catch (Exception ex)
