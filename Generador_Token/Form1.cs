@@ -157,7 +157,8 @@ namespace Generador_Token
                             Dispositivo = x.maquina,
                             MAC = x.nro_mac,
                             Modulos = x.modulos,
-                            Token = x.codigo_act
+                            Token = x.codigo_act,
+                            FechaActivacion = x.factivar
                         })
                         .ToList();
 
