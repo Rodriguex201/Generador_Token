@@ -28,6 +28,8 @@ namespace Generador_Token
         {
             InitializeComponent();
             //ConectionDatabase();
+            BtnBuscarDispo.Visible = false;
+            btnBuscarMac.Visible = false;
         }
 
         private async void CargarDatos()
@@ -40,7 +42,7 @@ namespace Generador_Token
                 DataConexion.Abrir();
 
                 // Consulta
-                string query = $"SELECT maquina, nro_mac, codigo_act FROM empresas.llequipo where '{empresa}'";
+                string query = $"SELECT maquina, nro_mac, modulos, codigo_act FROM empresas.llequipo where '{empresa}'";
 
                 using (MySqlCommand cmd = new MySqlCommand(query, conexionDB))
                 using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
@@ -72,6 +74,7 @@ namespace Generador_Token
 
 
                 TbToken.Text = codigo; // se muestra el código generado en el TextBox
+                await CargarMacsParaDispositivoAsync(dispositivoSelect);
             }
             else
             {
@@ -81,27 +84,46 @@ namespace Generador_Token
         }
 
         //Boton Para buscar la Mac segun el Dispositivo
-        private void btnBuscar_Click(object sender, EventArgs e) //BUSCAR MAC
+        private async void btnBuscar_Click(object sender, EventArgs e) //BUSCAR MAC
         {
-            CmbMac.Items.Clear(); // se limpia el ComboBox de MACs para evitar duplicados
-            dispositivoSelect = CmbDispositivo.SelectedItem?.ToString(); // se obtiene la mac de los dispositivos seleccionados
-
-            var mac = ServiceBuscarEquipo.ListaMac(dispositivoSelect).GetAwaiter().GetResult();// se obtiene la lista de MACs del dispositivo seleccionado
-            CmbMac.Items.AddRange(mac.ToArray()); // se agregan las MACs al ComboBox
+            await CargarMacsParaDispositivoAsync(CmbDispositivo.SelectedItem?.ToString());
         }
 
-        
+
 
         //Boton que realiza la busqueda de Dispositivos segun la Base de datos Empresa (A000)
-        private void button1_Click(object sender, EventArgs e) //BUSCAR DISPOSITIVOS
+        private async void button1_Click(object sender, EventArgs e) //BUSCAR DISPOSITIVOS
         {
-            //CmbMac
-            CmbDispositivo.Items.Clear(); // se limpia el ComboBox de dispositivos para evitar duplicados
-            empresa = TxtCodEmpresa.Text;
-            var dispositivo = Servicesllequipo.ListaDispositivos(empresa).GetAwaiter().GetResult(); // se guarda la lista de dispositivos
-            CmbDispositivo.Items.AddRange(dispositivo.ToArray()); // se agregan los dispositivos al ComboBox
-            
-           
+            var dispositivoActual = CmbDispositivo.SelectedItem?.ToString();
+            var macActual = CmbMac.SelectedItem?.ToString();
+
+            await CargarDispositivosPorEmpresaAsync(dispositivoActual);
+
+            var dispositivoSeleccionado = CmbDispositivo.SelectedItem?.ToString();
+            if (!string.IsNullOrWhiteSpace(dispositivoSeleccionado))
+            {
+                await CargarMacsParaDispositivoAsync(dispositivoSeleccionado, macActual);
+            }
+        }
+
+        private async void btnRefrescarGenerar_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(TxtCodEmpresa.Text))
+            {
+                MessageBox.Show("Ingrese un código de empresa para refrescar los datos.");
+                return;
+            }
+
+            var dispositivoActual = CmbDispositivo.SelectedItem?.ToString();
+            var macActual = CmbMac.SelectedItem?.ToString();
+
+            await CargarDispositivosPorEmpresaAsync(dispositivoActual);
+
+            var dispositivoSeleccionado = CmbDispositivo.SelectedItem?.ToString();
+            if (!string.IsNullOrWhiteSpace(dispositivoSeleccionado))
+            {
+                await CargarMacsParaDispositivoAsync(dispositivoSeleccionado, macActual);
+            }
         }
         private void btnBuscar_Click_1(object sender, EventArgs e)  //CARGAR TABLA
         {
@@ -116,11 +138,15 @@ namespace Generador_Token
                 else
                 {
                     var dispositivo = Servicesllequipo.Consultar(empresa).GetAwaiter().GetResult(); // se guarda la lista de dispositivos
+                    // M10: Pedidos(Distribuicion) y M12: Restaurantes
                     var listaFiltrada = dispositivo
+                        .Where(x => !string.IsNullOrWhiteSpace(x.modulos) &&
+                                    x.modulos.IndexOf("M", StringComparison.OrdinalIgnoreCase) >= 0)
                         .Select(x => new
                         {
                             Dispositivo = x.maquina,
                             MAC = x.nro_mac,
+                            Modulos = x.modulos,
                             Token = x.codigo_act
                         })
                         .ToList();
@@ -143,9 +169,9 @@ namespace Generador_Token
 
         }
 
-        private void CmbTipodispositivo_SelectedIndexChanged(object sender, EventArgs e)
+        private async void CmbTipodispositivo_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            await CargarMacsParaDispositivoAsync(CmbDispositivo.SelectedItem?.ToString());
         }
 
 
@@ -182,6 +208,89 @@ namespace Generador_Token
             {
                 MessageBox.Show("Error al intentar borrar: " + ex.Message);
             }
+        }
+
+        private async Task CargarDispositivosPorEmpresaAsync(string dispositivoSeleccionado = null)
+        {
+            empresa = TxtCodEmpresa.Text.Trim();
+
+            CmbDispositivo.Items.Clear();
+            CmbMac.Items.Clear();
+
+            if (string.IsNullOrWhiteSpace(empresa))
+            {
+                return;
+            }
+
+            try
+            {
+                var dispositivos = await Servicesllequipo.ListaDispositivos(empresa);
+
+                if (dispositivos != null && dispositivos.Count > 0)
+                {
+                    CmbDispositivo.Items.AddRange(dispositivos.ToArray());
+                    if (!string.IsNullOrWhiteSpace(dispositivoSeleccionado) && dispositivos.Contains(dispositivoSeleccionado))
+                    {
+                        CmbDispositivo.SelectedItem = dispositivoSeleccionado;
+                    }
+                    else
+                    {
+                        CmbDispositivo.SelectedIndex = 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar dispositivos: " + ex.Message);
+            }
+        }
+
+        private async Task CargarMacsParaDispositivoAsync(string dispositivo, string macSeleccionada = null)
+        {
+            CmbMac.Items.Clear();
+
+            if (string.IsNullOrWhiteSpace(dispositivo))
+            {
+                return;
+            }
+
+            var codigoEmpresa = empresa;
+            if (string.IsNullOrWhiteSpace(codigoEmpresa))
+            {
+                codigoEmpresa = TxtCodEmpresa.Text.Trim();
+            }
+
+            if (string.IsNullOrWhiteSpace(codigoEmpresa))
+            {
+                return;
+            }
+
+            try
+            {
+                var macs = await ServiceBuscarEquipo.ListaMac(codigoEmpresa, dispositivo);
+
+                if (macs != null && macs.Count > 0)
+                {
+                    CmbMac.Items.AddRange(macs.ToArray());
+                    if (!string.IsNullOrWhiteSpace(macSeleccionada) && macs.Contains(macSeleccionada))
+                    {
+                        CmbMac.SelectedItem = macSeleccionada;
+                    }
+                    else
+                    {
+                        CmbMac.SelectedIndex = 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar direcciones MAC: " + ex.Message);
+            }
+        }
+
+        private async void TxtCodEmpresa_TextChanged(object sender, EventArgs e)
+        {
+            await CargarDispositivosPorEmpresaAsync();
         }
     }
 }

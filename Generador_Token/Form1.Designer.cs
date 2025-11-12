@@ -46,6 +46,7 @@ namespace Generador_Token
             this.TbToken = new System.Windows.Forms.TextBox();
             this.GenerarToken = new System.Windows.Forms.Button();
             this.BtnBuscarDispo = new System.Windows.Forms.Button();
+            this.btnRefrescarGenerar = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Generar_Token = new System.Windows.Forms.TabPage();
             this.Consultar_Token = new System.Windows.Forms.TabPage();
@@ -54,6 +55,7 @@ namespace Generador_Token
             this.lbCodEmpre = new System.Windows.Forms.Label();
             this.Tabla = new System.Windows.Forms.DataGridView();
             this.btnBuscar = new System.Windows.Forms.Button();
+            this.lbModuloInfo = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Generar_Token.SuspendLayout();
             this.Consultar_Token.SuspendLayout();
@@ -79,6 +81,7 @@ namespace Generador_Token
             this.TxtCodEmpresa.Name = "TxtCodEmpresa";
             this.TxtCodEmpresa.Size = new System.Drawing.Size(268, 26);
             this.TxtCodEmpresa.TabIndex = 10;
+            this.TxtCodEmpresa.TextChanged += new System.EventHandler(this.TxtCodEmpresa_TextChanged);
             // 
             // lbTipoDispositivo
             // 
@@ -182,9 +185,23 @@ namespace Generador_Token
             this.BtnBuscarDispo.Text = "Buscar Dispositivo";
             this.BtnBuscarDispo.UseVisualStyleBackColor = false;
             this.BtnBuscarDispo.Click += new System.EventHandler(this.button1_Click);
-            // 
+            //
+            // btnRefrescarGenerar
+            //
+            this.btnRefrescarGenerar.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnRefrescarGenerar.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnRefrescarGenerar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRefrescarGenerar.Font = new System.Drawing.Font("Segoe UI Symbol", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRefrescarGenerar.Location = new System.Drawing.Point(307, 45);
+            this.btnRefrescarGenerar.Name = "btnRefrescarGenerar";
+            this.btnRefrescarGenerar.Size = new System.Drawing.Size(44, 37);
+            this.btnRefrescarGenerar.TabIndex = 12;
+            this.btnRefrescarGenerar.Text = "↻";
+            this.btnRefrescarGenerar.UseVisualStyleBackColor = false;
+            this.btnRefrescarGenerar.Click += new System.EventHandler(this.btnRefrescarGenerar_Click);
+            //
             // tabControl1
-            // 
+            //
             this.tabControl1.Controls.Add(this.Generar_Token);
             this.tabControl1.Controls.Add(this.Consultar_Token);
             this.tabControl1.Cursor = System.Windows.Forms.Cursors.Arrow;
@@ -198,6 +215,7 @@ namespace Generador_Token
             // Generar_Token
             // 
             this.Generar_Token.BackColor = System.Drawing.Color.Azure;
+            this.Generar_Token.Controls.Add(this.btnRefrescarGenerar);
             this.Generar_Token.Controls.Add(this.GenerarToken);
             this.Generar_Token.Controls.Add(this.BtnBuscarDispo);
             this.Generar_Token.Controls.Add(this.lbToken);
@@ -217,6 +235,7 @@ namespace Generador_Token
             // 
             // Consultar_Token
             // 
+            this.Consultar_Token.Controls.Add(this.lbModuloInfo);
             this.Consultar_Token.Controls.Add(this.button1);
             this.Consultar_Token.Controls.Add(this.txtEmpresa);
             this.Consultar_Token.Controls.Add(this.lbCodEmpre);
@@ -291,9 +310,20 @@ namespace Generador_Token
             this.btnBuscar.Text = "BUSCAR";
             this.btnBuscar.UseVisualStyleBackColor = false;
             this.btnBuscar.Click += new System.EventHandler(this.btnBuscar_Click_1);
-            // 
+            //
+            // lbModuloInfo
+            //
+            this.lbModuloInfo.AutoSize = true;
+            this.lbModuloInfo.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbModuloInfo.ForeColor = System.Drawing.Color.DimGray;
+            this.lbModuloInfo.Location = new System.Drawing.Point(12, 46);
+            this.lbModuloInfo.Name = "lbModuloInfo";
+            this.lbModuloInfo.Size = new System.Drawing.Size(260, 19);
+            this.lbModuloInfo.TabIndex = 14;
+            this.lbModuloInfo.Text = "M10: Pedidos (Distribución) | M12: Restaurantes";
+            //
             // Form1
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
@@ -328,6 +358,7 @@ namespace Generador_Token
         private System.Windows.Forms.TextBox TbToken;
         private System.Windows.Forms.Button GenerarToken;
         private Button BtnBuscarDispo;
+        private Button btnRefrescarGenerar;
         private TabControl tabControl1;
         private TabPage Generar_Token;
         private TabPage Consultar_Token;
@@ -335,6 +366,7 @@ namespace Generador_Token
         private DataGridView Tabla;
         private Label lbCodEmpre;
         private Button button1;
+        private Label lbModuloInfo;
     }
 }
 
