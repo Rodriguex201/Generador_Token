@@ -9,6 +9,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -30,6 +32,12 @@ namespace Generador_Token
             //ConectionDatabase();
             BtnBuscarDispo.Visible = false;
             btnBuscarMac.Visible = false;
+
+            var iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "iconotoken.ico");
+            if (File.Exists(iconPath))
+            {
+                this.Icon = new Icon(iconPath);
+            }
         }
 
         private async void CargarDatos()
