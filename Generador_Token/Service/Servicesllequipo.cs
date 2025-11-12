@@ -63,7 +63,7 @@ namespace Generador_Token.Services
                 var conexionDB = await DataConexion.Conectar();
                 DataConexion.Abrir();
 
-                string query = "SELECT maquina, nro_mac, codigo_act, modulos FROM empresas.llequipo " +
+                string query = "SELECT maquina, nro_mac, codigo_act, modulos, factivar FROM empresas.llequipo " +
                                "WHERE empresa = @empresa AND modulos IN ('M10','M12','M');";
 
 
@@ -79,6 +79,7 @@ namespace Generador_Token.Services
                                 maquina = reader["maquina"].ToString(),
                                 nro_mac = reader["nro_mac"].ToString(),
                                 modulos = reader["modulos"].ToString(),
+                                factivar = ObtenerFechaActivacion(reader["factivar"]),
                                 //codigo_act = Convert.ToInt32(reader["codigo_act"].ToString())
                                 codigo_act = int.TryParse(reader["codigo_act"].ToString(), out int codigoActValue) ? codigoActValue : 0
                             };
@@ -98,6 +99,23 @@ namespace Generador_Token.Services
             }
             return lista;
 
+        }
+
+        private static string ObtenerFechaActivacion(object valorFecha)
+        {
+            if (valorFecha == null || valorFecha == DBNull.Value)
+            {
+                return string.Empty;
+            }
+
+            var fechaTexto = valorFecha.ToString();
+
+            if (DateTime.TryParse(fechaTexto, out DateTime fecha))
+            {
+                return fecha.ToString("dd/MM/yyyy HH:mm");
+            }
+
+            return fechaTexto;
         }
 
         //public static async Task<List<EmpresaModel>> Borrar(string codEmpresa)
