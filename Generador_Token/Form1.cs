@@ -295,7 +295,7 @@ namespace Generador_Token
 
         }
 
-        private void button1_Click_1(object sender, EventArgs e)  //BORRAR REGISTRO
+        private async void button1_Click_1(object sender, EventArgs e)  //BORRAR REGISTRO
         {
             if (Tabla.SelectedRows.Count == 0)
             {
@@ -304,6 +304,12 @@ namespace Generador_Token
             }
 
             string tokenSeleccionado = Tabla.SelectedRows[0].Cells["Token"].Value.ToString();
+
+            if (string.IsNullOrWhiteSpace(tokenSeleccionado))
+            {
+                MessageBox.Show("El registro seleccionado no tiene un token asociado para borrar.");
+                return;
+            }
 
             var confirmResult = MessageBox.Show("¿Estás seguro de que deseas borrar este registro?",
                                                 "Confirmar Borrado",
@@ -314,9 +320,22 @@ namespace Generador_Token
             try
             {
                 // ✅ Llamar al método async con await
-                var borrado = Servicesllequipo.Borrar(tokenSeleccionado);
+                var borrado = await Servicesllequipo.Borrar(tokenSeleccionado);
 
-                CargarDatos(); // vuelve a cargar la tabla
+                if (!borrado)
+                {
+                    return;
+                }
+
+                if (Tabla.SelectedRows[0].DataBoundItem is ConsultaTokenRow filaSeleccionada)
+                {
+                    _datosConsultaToken.Remove(filaSeleccionada);
+                    AplicarFiltro(_fechaFiltroActiva);
+                }
+                else
+                {
+                    CargarDatos(); // vuelve a cargar la tabla
+                }
 
             }
             catch (Exception ex)
