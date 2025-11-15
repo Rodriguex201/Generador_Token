@@ -72,7 +72,7 @@ namespace Generador_Token
             this.lblConexion.Name = "lblConexion";
             this.lblConexion.Size = new System.Drawing.Size(110, 19);
             this.lblConexion.TabIndex = 14;
-            this.lblConexion.Text = "Base de datos:";
+            this.lblConexion.Text = "Servidor:";
             //
             // cmbConexion
             //
