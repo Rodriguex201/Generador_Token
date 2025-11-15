@@ -67,7 +67,7 @@ namespace Generador_Token
             {
                 new ConexionIp
                 {
-                    Nombre = "Servidor B517 (200.118.190.213)",
+                    Nombre = "Servidor 200.118.190.213",
                     Database = "b517",
                     DataSource = "200.118.190.213",
                     Usuario = usuario,
@@ -75,7 +75,7 @@ namespace Generador_Token
                 },
                 new ConexionIp
                 {
-                    Nombre = "Servidor A000 (168.232.32.74)",
+                    Nombre = "Servidor 168.232.32.74",
                     Database = "a000",
                     DataSource = "168.232.32.74",
                     Usuario = usuario,
@@ -153,7 +153,7 @@ namespace Generador_Token
 
 
 
-        //Boton que realiza la busqueda de Dispositivos segun la Base de datos Empresa (A000)
+        //Boton que realiza la busqueda de Dispositivos segun la base de datos seleccionada
         private async void button1_Click(object sender, EventArgs e) //BUSCAR DISPOSITIVOS
         {
 
