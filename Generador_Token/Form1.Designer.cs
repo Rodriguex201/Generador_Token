@@ -35,6 +35,8 @@ namespace Generador_Token
         /// </summary>
         private void InitializeComponent()
         {
+            this.lblConexion = new System.Windows.Forms.Label();
+            this.cmbConexion = new System.Windows.Forms.ComboBox();
             this.lbCodEmpresa = new System.Windows.Forms.Label();
             this.TxtCodEmpresa = new System.Windows.Forms.TextBox();
             this.lbTipoDispositivo = new System.Windows.Forms.Label();
@@ -62,8 +64,29 @@ namespace Generador_Token
             ((System.ComponentModel.ISupportInitialize)(this.Tabla)).BeginInit();
             this.SuspendLayout();
             // 
+            // lblConexion
+            //
+            this.lblConexion.AutoSize = true;
+            this.lblConexion.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblConexion.Location = new System.Drawing.Point(12, 9);
+            this.lblConexion.Name = "lblConexion";
+            this.lblConexion.Size = new System.Drawing.Size(110, 19);
+            this.lblConexion.TabIndex = 14;
+            this.lblConexion.Text = "Base de datos:";
+            //
+            // cmbConexion
+            //
+            this.cmbConexion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbConexion.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbConexion.FormattingEnabled = true;
+            this.cmbConexion.Location = new System.Drawing.Point(128, 7);
+            this.cmbConexion.Name = "cmbConexion";
+            this.cmbConexion.Size = new System.Drawing.Size(307, 25);
+            this.cmbConexion.TabIndex = 15;
+            this.cmbConexion.SelectedIndexChanged += new System.EventHandler(this.cmbConexion_SelectedIndexChanged);
+            //
             // lbCodEmpresa
-            // 
+            //
             this.lbCodEmpresa.AutoSize = true;
             this.lbCodEmpresa.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbCodEmpresa.Location = new System.Drawing.Point(21, 11);
@@ -206,10 +229,10 @@ namespace Generador_Token
             this.tabControl1.Controls.Add(this.Consultar_Token);
             this.tabControl1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.tabControl1.Font = new System.Drawing.Font("Lucida Sans", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabControl1.Location = new System.Drawing.Point(0, -3);
+            this.tabControl1.Location = new System.Drawing.Point(0, 44);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(686, 397);
+            this.tabControl1.Size = new System.Drawing.Size(686, 387);
             this.tabControl1.TabIndex = 0;
             // 
             // Generar_Token
@@ -229,7 +252,7 @@ namespace Generador_Token
             this.Generar_Token.Controls.Add(this.lbCodEmpresa);
             this.Generar_Token.Location = new System.Drawing.Point(4, 24);
             this.Generar_Token.Name = "Generar_Token";
-            this.Generar_Token.Size = new System.Drawing.Size(678, 369);
+            this.Generar_Token.Size = new System.Drawing.Size(678, 359);
             this.Generar_Token.TabIndex = 0;
             this.Generar_Token.Text = "Generar Token";
             // 
@@ -243,7 +266,7 @@ namespace Generador_Token
             this.Consultar_Token.Controls.Add(this.btnBuscar);
             this.Consultar_Token.Location = new System.Drawing.Point(4, 24);
             this.Consultar_Token.Name = "Consultar_Token";
-            this.Consultar_Token.Size = new System.Drawing.Size(678, 369);
+            this.Consultar_Token.Size = new System.Drawing.Size(678, 359);
             this.Consultar_Token.TabIndex = 0;
             this.Consultar_Token.Text = "Consultar Token";
             this.Consultar_Token.UseVisualStyleBackColor = true;
@@ -329,7 +352,9 @@ namespace Generador_Token
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
-            this.ClientSize = new System.Drawing.Size(679, 387);
+            this.ClientSize = new System.Drawing.Size(679, 431);
+            this.Controls.Add(this.cmbConexion);
+            this.Controls.Add(this.lblConexion);
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
             this.Text = "TokenManager";
@@ -369,6 +394,8 @@ namespace Generador_Token
         private Label lbCodEmpre;
         private Button button1;
         private Label lbModuloInfo;
+        private System.Windows.Forms.Label lblConexion;
+        private System.Windows.Forms.ComboBox cmbConexion;
     }
 }
 

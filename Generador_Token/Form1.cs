@@ -8,6 +8,7 @@ using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -28,6 +29,7 @@ namespace Generador_Token
         public string empresa;
         private List<ConsultaTokenRow> _datosConsultaToken = new List<ConsultaTokenRow>();
         private DateTime? _fechaFiltroActiva;
+        private readonly List<ConexionIp> _conexionesDisponibles;
 
         private class ConsultaTokenRow
         {
@@ -44,6 +46,8 @@ namespace Generador_Token
         public Form1()
         {
             InitializeComponent();
+            _conexionesDisponibles = CrearConexionesPredeterminadas();
+            InicializarSelectorConexion();
             //ConectionDatabase();
             BtnBuscarDispo.Visible = false;
             btnBuscarMac.Visible = false;
@@ -55,12 +59,82 @@ namespace Generador_Token
             }
         }
 
+        private List<ConexionIp> CrearConexionesPredeterminadas()
+        {
+            var conexiones = new List<ConexionIp>();
+
+            foreach (ConnectionStringSettings configuracion in ConfigurationManager.ConnectionStrings)
+            {
+                if (configuracion == null || string.IsNullOrWhiteSpace(configuracion.ConnectionString))
+                {
+                    continue;
+                }
+
+                // Ignorar conexiones que no estén pensadas para MySQL o que son agregadas por defecto
+                if (!string.IsNullOrWhiteSpace(configuracion.ProviderName) &&
+                    !configuracion.ProviderName.Contains("MySql", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                try
+                {
+                    var builder = new MySqlConnectionStringBuilder(configuracion.ConnectionString);
+
+                    conexiones.Add(new ConexionIp
+                    {
+                        Nombre = string.IsNullOrWhiteSpace(configuracion.Name)
+                            ? $"{builder.Server} ({builder.Database})"
+                            : configuracion.Name,
+                        Database = builder.Database,
+                        DataSource = builder.Server,
+                        Usuario = builder.UserID,
+                        Password = builder.Password
+                    });
+                }
+                catch
+                {
+                    // Si una entrada no puede convertirse a un MySqlConnectionStringBuilder la ignoramos
+                }
+            }
+
+            if (conexiones.Count == 0)
+            {
+                conexiones.Add(new ConexionIp
+                {
+                    Nombre = "Servidor principal",
+                    Database = "b517",
+                    DataSource = "200.118.190.213",
+                    Usuario = "RmSoft20X",
+                    Password = "*LiLo89*"
+                });
+            }
+
+            return conexiones;
+        }
+
+        private void InicializarSelectorConexion()
+        {
+            cmbConexion.DisplayMember = nameof(ConexionIp.Nombre);
+            cmbConexion.ValueMember = null;
+            cmbConexion.DataSource = _conexionesDisponibles;
+            cmbConexion.Enabled = _conexionesDisponibles.Count > 0;
+
+            if (_conexionesDisponibles.Count > 0)
+            {
+                DataConexion.Configure(_conexionesDisponibles[0]);
+                cmbConexion.SelectedIndex = 0;
+            }
+            else
+            {
+                MessageBox.Show("No se encontraron conexiones configuradas. Agregue cadenas de conexión MySQL en App.config.");
+            }
+        }
+
         private async void CargarDatos()
         {
             try
             {
-                // Configurar conexión
-                DataConexion.GetConnectionString(new List<EmpresaModel>()); // opcional si ya lo hace internamente
                 var conexionDB = await DataConexion.Conectar(); // debe retornar MySqlConnection, NO Task<MySqlConnection>
                 DataConexion.Abrir();
 
@@ -427,6 +501,34 @@ namespace Generador_Token
             catch (Exception ex)
             {
                 MessageBox.Show("Error al cargar direcciones MAC: " + ex.Message);
+            }
+        }
+
+        private async void cmbConexion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!(cmbConexion.SelectedItem is ConexionIp conexionSeleccionada))
+            {
+                return;
+            }
+
+            DataConexion.Configure(conexionSeleccionada);
+
+            var dispositivoActual = CmbDispositivo.SelectedItem?.ToString();
+            var macActual = CmbMac.SelectedItem?.ToString();
+
+            if (!string.IsNullOrWhiteSpace(TxtCodEmpresa.Text))
+            {
+                await CargarDispositivosPorEmpresaAsync(dispositivoActual);
+
+                if (!string.IsNullOrWhiteSpace(dispositivoActual))
+                {
+                    await CargarMacsParaDispositivoAsync(dispositivoActual, macActual);
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(txtEmpresa.Text) && Tabla.DataSource != null)
+            {
+                btnBuscar_Click_1(sender, e);
             }
         }
 

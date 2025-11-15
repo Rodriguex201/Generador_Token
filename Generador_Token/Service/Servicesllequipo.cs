@@ -17,7 +17,6 @@ namespace Generador_Token.Services
             var lista = new List<string>();
             try
             {
-                DataConexion.GetConnectionString(new List<Models.EmpresaModel>()); // Cambiado a acceso estático
                 var conexionDB = await DataConexion.Conectar();
                 DataConexion.Abrir();
 
@@ -59,7 +58,6 @@ namespace Generador_Token.Services
             var lista = new List<EmpresaModel>();
             try
             {
-                DataConexion.GetConnectionString(new List<EmpresaModel>()); // Cambiado a acceso estático
                 var conexionDB = await DataConexion.Conectar();
                 DataConexion.Abrir();
 
@@ -126,7 +124,6 @@ namespace Generador_Token.Services
 
             try
             {
-                DataConexion.GetConnectionString(new List<EmpresaModel>()); // Cambiado a acceso estático
                 var conexionDB = await DataConexion.Conectar();
                 DataConexion.Abrir();
 

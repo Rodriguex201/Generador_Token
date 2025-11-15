@@ -1,5 +1,4 @@
 using Generador_Token.Data;
-using Generador_Token.Models;
 using MySqlConnector;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,6 @@ namespace Generador_Token.Service
     {
         public static async Task<List<string>> ListaMac(string empresa, string dispositivo)
         {
-            DataConexion.GetConnectionString(new List<EmpresaModel>()); // Cambiado a acceso estatico
             var conexionDB = await DataConexion.Conectar();
             List<string> lista = new List<string>();
             try
