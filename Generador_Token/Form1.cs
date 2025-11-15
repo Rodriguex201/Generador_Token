@@ -28,6 +28,7 @@ namespace Generador_Token
         public string empresa;
         private List<ConsultaTokenRow> _datosConsultaToken = new List<ConsultaTokenRow>();
         private DateTime? _fechaFiltroActiva;
+        private readonly List<ConexionIp> _conexionesDisponibles;
 
         private class ConsultaTokenRow
         {
@@ -44,6 +45,8 @@ namespace Generador_Token
         public Form1()
         {
             InitializeComponent();
+            _conexionesDisponibles = CrearConexionesPredeterminadas();
+            InicializarSelectorConexion();
             //ConectionDatabase();
             BtnBuscarDispo.Visible = false;
             btnBuscarMac.Visible = false;
@@ -55,12 +58,48 @@ namespace Generador_Token
             }
         }
 
+        private List<ConexionIp> CrearConexionesPredeterminadas()
+        {
+            const string usuario = "RmSoft20X";
+            const string password = "*LiLo89*";
+
+            return new List<ConexionIp>
+            {
+                new ConexionIp
+                {
+                    Nombre = "Servidor B517 (200.118.190.213)",
+                    Database = "b517",
+                    DataSource = "200.118.190.213",
+                    Usuario = usuario,
+                    Password = password
+                },
+                new ConexionIp
+                {
+                    Nombre = "Servidor A000 (168.232.32.74)",
+                    Database = "a000",
+                    DataSource = "168.232.32.74",
+                    Usuario = usuario,
+                    Password = password
+                }
+            };
+        }
+
+        private void InicializarSelectorConexion()
+        {
+            cmbConexion.DisplayMember = nameof(ConexionIp.Nombre);
+            cmbConexion.ValueMember = null;
+            cmbConexion.DataSource = _conexionesDisponibles;
+
+            if (_conexionesDisponibles.Count > 0)
+            {
+                DataConexion.Configure(_conexionesDisponibles[0]);
+            }
+        }
+
         private async void CargarDatos()
         {
             try
             {
-                // Configurar conexión
-                DataConexion.GetConnectionString(new List<EmpresaModel>()); // opcional si ya lo hace internamente
                 var conexionDB = await DataConexion.Conectar(); // debe retornar MySqlConnection, NO Task<MySqlConnection>
                 DataConexion.Abrir();
 
@@ -427,6 +466,34 @@ namespace Generador_Token
             catch (Exception ex)
             {
                 MessageBox.Show("Error al cargar direcciones MAC: " + ex.Message);
+            }
+        }
+
+        private async void cmbConexion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!(cmbConexion.SelectedItem is ConexionIp conexionSeleccionada))
+            {
+                return;
+            }
+
+            DataConexion.Configure(conexionSeleccionada);
+
+            var dispositivoActual = CmbDispositivo.SelectedItem?.ToString();
+            var macActual = CmbMac.SelectedItem?.ToString();
+
+            if (!string.IsNullOrWhiteSpace(TxtCodEmpresa.Text))
+            {
+                await CargarDispositivosPorEmpresaAsync(dispositivoActual);
+
+                if (!string.IsNullOrWhiteSpace(dispositivoActual))
+                {
+                    await CargarMacsParaDispositivoAsync(dispositivoActual, macActual);
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(txtEmpresa.Text) && Tabla.DataSource != null)
+            {
+                btnBuscar_Click_1(sender, e);
             }
         }
 
