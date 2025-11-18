@@ -62,31 +62,71 @@ namespace Generador_Token
         {
             const string usuario = "RmSoft20X";
             const string password = "*LiLo89*";
+            const string servidorA = "168.232.32.74";
+            const string servidorB = "200.118.190.213";
 
             return new List<ConexionIp>
             {
                 new ConexionIp
                 {
-                    Nombre = "Servidor B517 (200.118.190.213)",
-                    Database = "b517",
-                    DataSource = "200.118.190.213",
+                    Nombre = CrearNombreServidorSeguro(servidorB),
+                    DataSource = servidorB,
                     Usuario = usuario,
                     Password = password
                 },
                 new ConexionIp
                 {
-                    Nombre = "Servidor A000 (168.232.32.74)",
-                    Database = "a000",
-                    DataSource = "168.232.32.74",
+                    Nombre = CrearNombreServidorSeguro(servidorA),
+                    DataSource = servidorA,
                     Usuario = usuario,
                     Password = password
                 }
             };
         }
 
+        private static string CrearNombreServidorSeguro(string dataSource)
+        {
+            if (string.IsNullOrWhiteSpace(dataSource))
+            {
+                return "Servidor";
+            }
+
+            var segmentos = dataSource.Split('.');
+            if (segmentos.Length >= 2)
+            {
+                var partesEnmascaradas = Enumerable.Repeat("XXX", segmentos.Length - 1)
+                    .Append(segmentos.Last());
+
+                return $"Servidor {string.Join(".", partesEnmascaradas)}";
+            }
+
+            var longitudVisible = Math.Min(3, dataSource.Length);
+            var sufijo = dataSource.Substring(dataSource.Length - longitudVisible, longitudVisible);
+            return $"Servidor XXX{sufijo}";
+        }
+
+        private bool IntentarConfigurarBaseDatos(string codigoEmpresa)
+        {
+            if (string.IsNullOrWhiteSpace(codigoEmpresa))
+            {
+                return false;
+            }
+
+            try
+            {
+                DataConexion.SeleccionarBaseDatos(codigoEmpresa);
+                return true;
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show(ex.Message);
+                return false;
+            }
+        }
+
         private void InicializarSelectorConexion()
         {
-            cmbConexion.DisplayMember = nameof(ConexionIp.Nombre);
+            cmbConexion.DisplayMember = nameof(ConexionIp.NombreSeguro);
             cmbConexion.ValueMember = null;
             cmbConexion.DataSource = _conexionesDisponibles;
 
@@ -130,6 +170,11 @@ namespace Generador_Token
 
             if (empresa != null && dispositivoSelect != null && codigoMac != null)
             {
+                if (!IntentarConfigurarBaseDatos(empresa))
+                {
+                    return;
+                }
+
                 string codigo = ServiceCodigo.CrearCodActivacionFecha(empresa, dispositivoSelect, codigoMac);
                 await ServiceCodigo.RegistrarCod(codigo,codigoMac); // se registra el código generado en la base de datos
                 MessageBox.Show("Su Codigo es: " + codigo);
@@ -153,7 +198,7 @@ namespace Generador_Token
 
 
 
-        //Boton que realiza la busqueda de Dispositivos segun la Base de datos Empresa (A000)
+        //Boton que realiza la busqueda de Dispositivos segun la base de datos seleccionada
         private async void button1_Click(object sender, EventArgs e) //BUSCAR DISPOSITIVOS
         {
 
@@ -201,6 +246,11 @@ namespace Generador_Token
                 }
                 else
                 {
+                    if (!IntentarConfigurarBaseDatos(empresa))
+                    {
+                        return;
+                    }
+
                     var dispositivo = Servicesllequipo.Consultar(empresa).GetAwaiter().GetResult(); // se guarda la lista de dispositivos
                     // M10: Pedidos(Distribuicion) y M12: Restaurantes
                     _datosConsultaToken = dispositivo
@@ -397,6 +447,11 @@ namespace Generador_Token
                 return;
             }
 
+            if (!IntentarConfigurarBaseDatos(empresa))
+            {
+                return;
+            }
+
             try
             {
                 var dispositivos = await Servicesllequipo.ListaDispositivos(empresa);
@@ -440,6 +495,11 @@ namespace Generador_Token
             }
 
             if (string.IsNullOrWhiteSpace(codigoEmpresa))
+            {
+                return;
+            }
+
+            if (!IntentarConfigurarBaseDatos(codigoEmpresa))
             {
                 return;
             }

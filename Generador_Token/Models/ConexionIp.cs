@@ -14,9 +14,34 @@ namespace Generador_Token.Models
         public string Usuario { get; set; }
         public string Password { get; set; }
 
+        public string NombreSeguro => string.IsNullOrWhiteSpace(Nombre)
+            ? ConstruirNombreSeguro()
+            : Nombre;
+
         public override string ToString()
         {
-            return string.IsNullOrWhiteSpace(Nombre) ? base.ToString() : Nombre;
+            return string.IsNullOrWhiteSpace(Nombre) ? ConstruirNombreSeguro() : Nombre;
+        }
+
+        private string ConstruirNombreSeguro()
+        {
+            if (string.IsNullOrWhiteSpace(DataSource))
+            {
+                return string.Empty;
+            }
+
+            var segmentos = DataSource.Split('.');
+            if (segmentos.Length >= 2)
+            {
+                var partesEnmascaradas = Enumerable.Repeat("XXX", segmentos.Length - 1)
+                    .Append(segmentos.Last());
+
+                return $"Servidor {string.Join(".", partesEnmascaradas)}";
+            }
+
+            var longitudVisible = Math.Min(3, DataSource.Length);
+            var sufijo = DataSource.Substring(DataSource.Length - longitudVisible, longitudVisible);
+            return $"Servidor XXX{sufijo}";
         }
     }
 }
