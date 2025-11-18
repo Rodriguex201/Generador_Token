@@ -95,7 +95,7 @@ namespace Generador_Token
                 return true;
             }
             catch (InvalidOperationException ex)
-            {
+            { 
                 MessageBox.Show(ex.Message);
                 return false;
             }
