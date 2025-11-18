@@ -536,6 +536,15 @@ namespace Generador_Token
 
         private async void TxtCodEmpresa_TextChanged(object sender, EventArgs e)
         {
+            var codigoEmpresa = TxtCodEmpresa.Text.Trim();
+
+            if (codigoEmpresa.Length < 4)
+            {
+                CmbDispositivo.Items.Clear();
+                CmbMac.Items.Clear();
+                return;
+            }
+
             await CargarDispositivosPorEmpresaAsync();
         }
     }
