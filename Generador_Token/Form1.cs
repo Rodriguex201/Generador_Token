@@ -99,7 +99,7 @@ namespace Generador_Token
                 MessageBox.Show(ex.Message);
                 return false;
             }
-        }
+        } 
 
         private void InicializarSelectorConexion()
         {
