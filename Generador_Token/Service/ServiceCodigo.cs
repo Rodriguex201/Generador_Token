@@ -75,6 +75,52 @@ namespace Generador_Token.Service
             }
         }
 
+        public static async Task AsignarModuloM10SiCorresponde(string mac)
+        {
+            try
+            {
+                var conexionDB = await DataConexion.Conectar();
+
+                using (conexionDB)
+                {
+                    await conexionDB.OpenAsync();
+
+                    const string obtenerModulosQuery = "SELECT modulos FROM empresas.llequipo WHERE nro_mac = @mac LIMIT 1;";
+                    using (var obtenerModulos = new MySqlCommand(obtenerModulosQuery, conexionDB))
+                    {
+                        obtenerModulos.Parameters.AddWithValue("@mac", mac);
+
+                        var modulosActuales = (await obtenerModulos.ExecuteScalarAsync())?.ToString();
+
+                        if (string.IsNullOrWhiteSpace(modulosActuales))
+                        {
+                            return;
+                        }
+
+                        if (modulosActuales.IndexOf("M10", StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            return;
+                        }
+
+                        var nuevosModulos = modulosActuales + "M10";
+
+                        const string actualizarModulosQuery = "UPDATE empresas.llequipo SET modulos = @modulos WHERE nro_mac = @mac;";
+                        using (var actualizarModulos = new MySqlCommand(actualizarModulosQuery, conexionDB))
+                        {
+                            actualizarModulos.Parameters.AddWithValue("@modulos", nuevosModulos);
+                            actualizarModulos.Parameters.AddWithValue("@mac", mac);
+
+                            await actualizarModulos.ExecuteNonQueryAsync();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al actualizar módulos: {ex.Message}");
+            }
+        }
+
 
     }
 }

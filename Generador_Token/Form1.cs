@@ -152,6 +152,8 @@ namespace Generador_Token
                     return;
                 }
 
+                await ServiceCodigo.AsignarModuloM10SiCorresponde(codigoMac);
+
                 string codigo = ServiceCodigo.CrearCodActivacionFecha(empresa, dispositivoSelect, codigoMac);
                 await ServiceCodigo.RegistrarCod(codigo,codigoMac); // se registra el código generado en la base de datos
                 MessageBox.Show("Su Codigo es: " + codigo);
