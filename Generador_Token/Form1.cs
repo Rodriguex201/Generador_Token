@@ -78,6 +78,13 @@ namespace Generador_Token
                     DataSource = "168.232.32.74",
                     Usuario = usuario,
                     Password = password
+                },
+                new ConexionIp
+                {
+                    Nombre = "Servidor 192.168.1.150",
+                    DataSource = "192.168.1.150",
+                    Usuario = usuario,
+                    Password = password
                 }
             };
         }
