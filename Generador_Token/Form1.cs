@@ -67,8 +67,8 @@ namespace Generador_Token
             {
                 new ConexionIp
                 {
-                    Nombre = "Servidor 200.118.190.213",
-                    DataSource = "200.118.190.213",
+                    Nombre = "Servidor 200.118.190.167",
+                    DataSource = "200.118.190.167",
                     Usuario = usuario,
                     Password = password
                 },
